@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>수비학 계산기</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css"/>
+		<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script>
+			function calculate() {
+				var name = document.getElementById("name").value;
+				var birth = document.getElementById("birth").value;
+				
+
+			}
+		</script>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div class="container" style="margin-top: 10px;">
+			<div class="form-group">
+				<label>이름</label>
+				<input type ="text" class="form-control" id="name" placeholder="이름">
+			</div>
+			<div class="form-group">
+				<label>생년월일</label>
+				<input type="number" class="form-control" id="birth" placeholder="ex)18760515">
+			</div>
+			<button class="btn btn-primary" onclick="calculate();">계산하기</button>
+
+		</div>
+	</body>
+</html>
