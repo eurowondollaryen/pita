@@ -9,12 +9,83 @@
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script>
+			var master = [11, 22, 33];
+			var karma = [10, 13, 14, 16, 19];
+
+			var fiveNums = ["", "", "", "", ""];
+
+			function isExist(target, array) {
+				for(var i = 0; i < array.length; ++i) {
+					if(array[i] == target) {
+						return true;
+					}
+				}
+				return false;
+			}
+			function parseName(name) {//name 문자열을 받아서 json오브젝트의 배열로 리턴
+				for(var i = 0; i < name.length; ++i) {
+					if()
+				}
+			}
+			function makeOne(number) {//자릿수를 그냥 다 합하는 함수
+				if(number < 10 && number >= 0) {
+					return number;
+				}
+				else {
+					var result = 0;
+					while(number > 0) {
+						result += number%10;
+						number = Math.floor(number/10);
+					}
+					return result;
+				}
+			}
+			function makeOneBody(number, mode){//원리: 우선 33이하로 만든 후, 포함되면 거기서 스톱하고  
+				var result = number;
+				while(result > 33) {
+					result = makeOne(number);
+				}//33이하로 만들기
+
+				if(mode == 1) {//마스터수만 포함시키는 경우
+					if(isExist(result, master)) {
+						return (result + "/" + makeOne(result));
+					}
+					else {
+						if(result < 10) return result;
+						else {
+							result = makeOne(result);
+							return makeOneBody(result, mode);
+						}
+					}
+				}
+				else {//다포함시키는 경우
+					if(isExist(result, master) || isExist(result, karma)) {
+						var firstVal = result;
+						while(result >= 10) {
+							result = makeOne(result);
+						}
+						return (firstVal + "/" + result);
+					}
+					else {
+						if(result < 10) return result;
+						else {
+							result = makeOne(result);
+							return makeOneBody(result, mode);
+						}
+					}
+				}
+				return result;
+			}
 			function calculate() {
 				var name = document.getElementById("name").value;
 				var birth = document.getElementById("birth").value;
-				
+				var year = Math.floor(birth/10000);
+				var month = Math.floor((birth%10000)/100);
+				var day = birth%100;
 
+				var parsedName = 
 			}
+
 		</script>
 		<style type="text/css">
 		</style>
@@ -22,8 +93,8 @@
 	<body>
 		<div class="container" style="margin-top: 10px;">
 			<div class="form-group">
-				<label>이름</label>
-				<input type ="text" class="form-control" id="name" placeholder="이름">
+				<label>이름(자음/모음)</label>
+				<input type ="text" class="form-control" id="name" placeholder="ex) (15/1,7/31,5/5)">
 			</div>
 			<div class="form-group">
 				<label>생년월일</label>
