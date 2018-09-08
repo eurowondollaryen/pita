@@ -10,5 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "nodemon": "^1.18.4"
-  }
+  },
+  "engines" : {
+  "node": "v6.11.2",
+  "npm": "3.10.10"
+  },
 }

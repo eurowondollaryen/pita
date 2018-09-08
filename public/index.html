@@ -8,12 +8,52 @@
 		<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+		<script src="js/data.js"></script>
 		<script>
 			var master = [11, 22, 33];
 			var karma = [10, 13, 14, 16, 19];
+			var date = new Date();
+			var age = 0;
+			function makeInt(stringOrNumber) {
+				if(typeof stringOrNumber == "string") {
+					return parseInt(stringOrNumber[stringOrNumber.length-1]);
+				}
+				else return stringOrNumber;
+			}
+			function minAbs(num1, num2) {
+				var newnum1, newnum2;
+				if(typeof num1 == "string") {
+					newnum1 = parseInt(num1[num1.length-1]);
+				} else {
+					newnum1 = num1;
+				}
+				if(typeof num2 == "string") {
+					newnum2 = parseInt(num2[num2.length-1]);
+				} else {
+					newnum2 = num2;
+				}
 
-			var fiveNums = ["", "", "", "", ""];
-
+				if(newnum1 > newnum2) {
+					return newnum1 - newnum2;
+				} else {
+					return newnum2 - newnum1;
+				}
+			}
+			function adder(num1, num2) {
+				var result = 0;
+				var newnum1, newnum2;
+				if(typeof num1 == "string") {
+					newnum1 = parseInt(num1[num1.length-1]);
+				} else {
+					newnum1 = num1;
+				}
+				if(typeof num2 == "string") {
+					newnum2 = parseInt(num2[num2.length-1]);
+				} else {
+					newnum2 = num2;
+				}
+				return newnum1 + newnum2;
+			}
 			function isExist(target, array) {
 				for(var i = 0; i < array.length; ++i) {
 					if(array[i] == target) {
@@ -22,10 +62,21 @@
 				}
 				return false;
 			}
-			function parseName(name) {//name 문자열을 받아서 json오브젝트의 배열로 리턴
-				for(var i = 0; i < name.length; ++i) {
-					if()
+			function convert(piece) {//자음, 모음 각 성분을 숫자로 보내주는 것 true면 자음 false면 모음
+				var result;
+				for(var i = 0; i < ja.length; ++i) {
+					if(ja[i].kor == piece) {
+						result = { value: ja[i].num, jamo: true };
+						return result;
+					}
 				}
+				for(var i = 0; i < mo.length; ++i) {
+					if(mo[i].kor == piece) {
+						result = { value: mo[i].num, jamo: false};
+						return result;
+					}
+				}
+				alert("not korean");
 			}
 			function makeOne(number) {//자릿수를 그냥 다 합하는 함수
 				if(number < 10 && number >= 0) {
@@ -76,14 +127,148 @@
 				}
 				return result;
 			}
+			function parseName(name) {//name 문자열 배열([성,이름1,이름2,...])을 받아서 json오브젝트의 배열로 리턴
+				/*
+					리턴 형식 : result = {
+						{ parts: [{value: 숫자, jamo: true/false}, ...], number: 계산결과값 }
+					}
+				*/
+				var result = [];
+				for(var i = 0; i < name.length; ++i) {
+					var partsArr = [];
+					var finalNumber = 0;
+					for(var j = 0; j < name[i].length; ++j) {
+						var adder = convert(name[i][j]);
+						partsArr.push(adder);
+						finalNumber += adder.value;
+					}
+					finalNumber = makeOneBody(finalNumber, 1);
+					result.push({parts: partsArr, result: finalNumber});
+				}
+				return result;
+			}
+			function showResults(fiveN, T, PT, P, C){
+				var context = "";
+				context += "<hr><h2>결과</h2><hr>"
+				+ "<h6>" + date + " 기준 나이 : " + age + "세</h6><hr>"
+				+ "<h3>5가지 수</h3><hr>"
+				+ "<ul>"
+				+ "<li>1. 인생여정 수 (Life Path Nuber) : " + fiveN[0] + "</li>"
+				+ "<li>2. 운명 수 (Destiny Number) : " + fiveN[1] + "</li>"
+				+ "<li>3. 혼의 수 (Soul Number) : " + fiveN[2] + "</li>"
+				+ "<li>4. 성격 수 (Personality Number) : " + fiveN[3] + "</li>"
+				+ "<li>5. 완성 수 (Maturity Number) : " + fiveN[4] + "</li>"
+				+ "</ul>"
+				+ "<hr><h3>주요 주기 기간 혹은 시작 시점</h3><hr>"
+				+ "<ul>"
+				+ "<li>인생 여정 수가 " + T.journey + " 이므로 </li>"
+				+ "<li>첫 번째 주기 : " + T.term1[0] + " ~ " + T.term1[1] + "</li>"
+				+ "<li>두 번째 주기 : " + T.term2[0] + " ~ " + T.term2[1] + "</li>"
+				+ "<li>세 번째 주기 : " + T.term3[0] + " ~ " + T.term3[1] + "</li>"
+				+ "</ul>"
+				+ "<hr><h3>절정 수 기간(도전 수와 동일)</h3><hr>"
+				+ "<ul>"
+				+ "<li>36 - 인생여정 수 = " + PT[0] + "</li>"
+				+ "<li>1단계 + 9년 = " + (PT[0] + 1) + " ~ " + PT[1] + "</li>"
+				+ "<li>2단계 + 9년 = " + (PT[1] + 1) + " ~ " + PT[2] + "</li>"
+				+ "<li>3단계 이후~ = " + PT[3] + " ~ " + "</li>"
+				+ "</ul>"
+
+				+ "<hr><h3>절정 수</h3><hr>"
+				+ "<ul>"
+				+ "<li>1단계 : " + P[0] + "</li>"
+				+ "<li>2단계 : " + P[1] + "</li>"
+				+ "<li>3단계 : " + P[2] + "</li>"
+				+ "<li>4단계 : " + P[3] + "</li>"
+				+ "</ul>"
+
+				+ "<hr><h3>도전 수</h3><hr>"
+				+ "<ul>"
+				+ "<li>1단계 : " + C[0] + "</li>"
+				+ "<li>2단계 : " + C[1] + "</li>"
+				+ "<li>3단계 : " + C[2] + "</li>"
+				+ "<li>4단계 : " + C[3] + "</li>"
+				+ "</ul>"
+				document.getElementById('result').innerHTML = context;
+			}
 			function calculate() {
+				age = 0;
+				var fiveNums = [];
 				var name = document.getElementById("name").value;
 				var birth = document.getElementById("birth").value;
 				var year = Math.floor(birth/10000);
 				var month = Math.floor((birth%10000)/100);
 				var day = birth%100;
+				var nameArr = name.split(',');
+				var FinalName = parseName(nameArr);
+				age = date.getFullYear() - year + 1;
+				year = makeInt(makeOneBody(year,2));
+				month = makeInt(makeOneBody(month, 2));
+				day = makeInt(makeOneBody(day,2));
+				//year, month, day, FinalName 이용해서 다 구해내면 됨
 
-				var parsedName = 
+				fiveNums.push(makeOneBody((year + month + day),2));//인생여정 수 - 생년월일 더하기ok
+				var tempNum = 0;
+				var tempNum2 = 0;
+				for(var i = 0; i < FinalName.length; ++i) {
+					if (typeof FinalName[i].result == "string") {
+						tempNum += parseInt(FinalName[i].result[FinalName[i].result.length-1]);
+					}
+					else {
+						tempNum += FinalName[i].result;
+					}
+				}
+				fiveNums.push(makeOneBody(tempNum,2));//운명 수 - 이름 더하기ok
+				tempNum = 0;
+				for(var i = 0; i < FinalName.length; ++i) {
+					for(var j = 0; j < FinalName[i].parts.length; ++j) {
+						if(FinalName[i].parts[j].jamo == false) {
+							tempNum += FinalName[i].parts[j].value;
+						}
+						else {
+							tempNum2 += FinalName[i].parts[j].value;
+						}
+					}
+				}
+				fiveNums.push(makeOneBody(tempNum,2));//혼의 수 - 이름에서 모음만 골라서 합하기
+				fiveNums.push(makeOneBody(tempNum2,2));//성격 수 - 자음만 합해서 더하기, 자음 합은 tempNum2를 통해 미리 구해놓기
+				fiveNums.push(makeOneBody(adder(fiveNums[0],fiveNums[1]),2));//완성 수 - 여정 + 운명
+				//여기까지 숫자 5가지
+
+				var term;
+				var journeyTemp;
+				if(typeof fiveNums[0] == "string") {
+					journeyTemp = parseInt(fiveNums[0][fiveNums[0].length-1]);
+				} else {
+					journeyTemp = fiveNums[0];
+				}
+				for(var i = 0; i < terms.length; ++i) {
+					if(terms[i].journey == journeyTemp) {
+						term = terms[i];
+						break;
+					}
+				}
+				//여기까지 주기
+				var peakTerm = [];
+				peakTerm.push(36-journeyTemp);
+				peakTerm.push(peakTerm[0] + 9);
+				peakTerm.push(peakTerm[1] + 9);
+				peakTerm.push(peakTerm[2] + 1);
+				//여기까지 절정 기간
+				var peak = [];
+				peak.push(makeOneBody(adder(month, day),1));
+				peak.push(makeOneBody(adder(day, year),1));
+				peak.push(makeOneBody(adder(peak[0], peak[1]),1));
+				peak.push(makeOneBody(adder(month, year), 1));
+				//여기까지 절정수
+				var challenge = [];
+				challenge.push(minAbs(month, day));
+				challenge.push(minAbs(day,year));
+				challenge.push(minAbs(challenge[0],challenge[1]));
+				challenge.push(minAbs(month, year));
+				//여기까지 도전수
+				showResults(fiveNums, term, peakTerm, peak, challenge);
+
 			}
 
 		</script>
@@ -93,14 +278,20 @@
 	<body>
 		<div class="container" style="margin-top: 10px;">
 			<div class="form-group">
-				<label>이름(자음/모음)</label>
-				<input type ="text" class="form-control" id="name" placeholder="ex) (15/1,7/31,5/5)">
+				<label>이름(자음, 모음 분리해서 입력)</label>
+				<input type ="text" class="form-control" id="name" placeholder="ex)곽세훈 => ㄱㅗㅏㄱ,ㅅㅓㅣ,ㅎㅜㄴ 으로 입력">
 			</div>
 			<div class="form-group">
 				<label>생년월일</label>
 				<input type="number" class="form-control" id="birth" placeholder="ex)18760515">
 			</div>
 			<button class="btn btn-primary" onclick="calculate();">계산하기</button>
+
+			<div class="container">
+				<div class="result" id="result">
+
+				</div>
+			</div>
 
 		</div>
 	</body>
