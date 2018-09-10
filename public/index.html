@@ -14,6 +14,92 @@
 			var karma = [10, 13, 14, 16, 19];
 			var date = new Date();
 			var age = 0;
+			function divideOne(letter){
+				var retStr = "";
+				var rCho =
+		            [ "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",
+		                "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" ];
+			    var rJung =
+			            [ "ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅘ", "ㅙ", "ㅚ", "ㅛ", "ㅜ",
+			                "ㅝ", "ㅞ", "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ" ];
+			    var rJong =
+			            [ "", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ",
+			                "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ",
+			                "ㅍ", "ㅎ" ];
+			    var cho, jung, jong;
+			    var sTest = letter;
+			    var nTmp = sTest.charCodeAt(0) - 0xAC00;
+			    jong = nTmp % 28; // 종성
+			    jung = ( (nTmp - jong) / 28 ) % 21 // 중성
+			    cho = ( ( (nTmp - jong) / 28 ) - jung ) / 21 // 종성
+
+			    retStr += (rCho[cho]);//초성 push
+			    if(rJung[jung] == "ㅐ"){
+			    	retStr+=("ㅏ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅒ"){
+			    	retStr+=("ㅑ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅔ"){
+			    	retStr+=("ㅓ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅖ"){
+			    	retStr+=("ㅕ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅘ"){
+			    	retStr+=("ㅗ");
+			    	retStr+=("ㅏ");
+			    }
+			    else if(rJung[jung] == "ㅙ"){
+			    	retStr+=("ㅗ");
+			    	retStr+=("ㅏ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅚ"){
+			    	retStr+=("ㅗ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅝ"){
+			    	retStr+=("ㅜ");
+			    	retStr+=("ㅓ");
+			    }
+			    else if(rJung[jung] == "ㅞ"){
+			    	retStr+=("ㅜ");
+			    	retStr+=("ㅓ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅟ"){
+			    	retStr+=("ㅜ");
+			    	retStr+=("ㅣ");
+			    }
+			    else if(rJung[jung] == "ㅢ"){
+			    	retStr+=("ㅡ");
+			    	retStr+=("ㅣ");
+			  	}
+			  	else {
+			  		retStr+=rJung[jung];
+			  	}
+			  	retStr+=(rJong[jong]);
+			  	return retStr;
+			}
+			function divideAll(name){//string형태로 리턴해주면된다.
+				var retStr = "";
+				var nameChunks = [];
+				for(var i = 0; i < name.length; ++i) {//이름 한 자 한 자 분리
+					nameChunks.push(name[i]);
+				}
+
+				for(var i = 0; i < nameChunks.length; ++i) {
+					retStr += divideOne(nameChunks[i]);
+					if(i < nameChunks.length-1)retStr += ",";
+				}
+				console.log("retStr : " + retStr);
+				return retStr;
+			}
 			function makeInt(stringOrNumber) {
 				if(typeof stringOrNumber == "string") {
 					return parseInt(stringOrNumber[stringOrNumber.length-1]);
@@ -194,7 +280,7 @@
 			function calculate() {
 				age = 0;
 				var fiveNums = [];
-				var name = document.getElementById("name").value;
+				var name = divideAll(document.getElementById("name").value);
 				var birth = document.getElementById("birth").value;
 				var year = Math.floor(birth/10000);
 				var month = Math.floor((birth%10000)/100);
@@ -278,7 +364,7 @@
 		<div class="container" style="margin-top: 10px;">
 			<div class="form-group">
 				<label>이름(자음, 모음 분리해서 입력)</label>
-				<input type ="text" class="form-control" id="name" placeholder="ex)곽세훈 => ㄱㅗㅏㄱ,ㅅㅓㅣ,ㅎㅜㄴ 으로 입력">
+				<input type ="text" class="form-control" id="name">
 			</div>
 			<div class="form-group">
 				<label>생년월일</label>
@@ -291,7 +377,6 @@
 
 				</div>
 			</div>
-
 		</div>
 	</body>
 </html>
